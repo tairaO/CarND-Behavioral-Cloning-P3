@@ -23,7 +23,8 @@ The goals / steps of this project are the following:
 [image8]: ./fig_submit/measurement_data.png "All of the steering control data"
 [image9]: ./fig_submit/0.25_0.2_after_getting_data.png "Steering control data after removing straight driving"
 [image10]: ./fig_submit/nvidia_convdropout1.png "Loss and validation loss of the models versus epochs"
-[image10]: ./fig_submit/nvidia_convdropout2.png "Loss and validation loss of the models versus epochs"
+[image11]: ./fig_submit/nvidia_convdropout2.png "Loss and validation loss of the models versus epochs"
+[image12]: ./fig_submit/raw_measurements.png "Raw measurements histogram"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -56,13 +57,13 @@ The model.py file contains the code for training and saving the convolution neur
 
 My model consists of a convolution neural network with 5x5 filter sizes and 3x3 filter sizes and depths between 24 and 64 (model.py lines 129-143)
 
-The model includes RELU layers to introduce nonlinearity (code line 129-137), and the data is normalized in the model using a Keras lambda layer (code line 112) and cropped upper 70 and lower 25 rows in images (code line 113).
+The model includes RELU layers to introduce nonlinearity (code line 129-137), and the data is normalized in the model using a Keras lambda layer (code line 125) and cropped upper 70 and lower 25 rows in images (code line 126).
 
 #### 2. Attempts to reduce overfitting in the model
 
 The model contains dropout layers every after convolutional layer in order to reduce overfitting (model.py lines 130,132,134,136,138).
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 153). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 70). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
 #### 3. Model parameter tuning
 
@@ -102,11 +103,11 @@ Here is a visualization of the architecture.
 
 #### 3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps each on track one CCW and CW using center lane driving with mouse steering controller. Here is an example image of center lane driving:
+To capture good driving behavior, I first recorded two laps each on track one CCW and CW using center lane driving with mouse steering controller. Here is an example image of center lane driving. This:
 
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to recover from side of the lanes. These images show what a recovery looks like starting from side of the lanes. :
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to recover from side of the lanes. These images show what a recovery looks like starting from side of the lanes. This decreased left-bias because normally CCW driving tend to gather left-steering, vice versa. Therefore, driving CW and CCW helps model being generalized:
 
 ![alt text][image3]
 ![alt text][image4]
@@ -120,11 +121,11 @@ To augment the data set, first, I remove 75% of straight driving data because my
 
 
 
-Second, I also flipped images and angles thinking that this would help the model generalize. For example, here is an image that has then been flipped:
+Second, I also flipped images and angles thinking that this would help the model generalize. For example, here is an image that has then been flipped. This is because my steering control has more data of left driving. It is shown in [the histogram below][image12].  Therefore, only normal images, it tends to go left. Flipping images helps improve this bias.:
 
 ![alt text][image6]
 ![alt text][image7]
-
+![alt text][image12]
 
 
 After the collection process, I had 15318 number of data points. I then preprocessed this data by normalizing and cropping upper 70 rows and lower 25 rows.
